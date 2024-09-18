@@ -1,6 +1,6 @@
 #grid-container {
-    width: 400px; /* Tamaño inicial, ajustable según resolución */
-    height: 400px; /* Relación 1:1 */
+    height: 384px;
+    aspect-ratio: 1/1;
     display: grid;
     gap: 1px; /* Espacio entre celdas */
 }
@@ -26,4 +26,14 @@
 
 .end {
     background-color: #ff0000; /* Color para la celda de fin */
+}
+
+.current {
+    border: 2px solid rgb(0, 0, 0); /* Ejemplo de resaltado */
+    background-color: rgba(255, 255, 0, 0.6); /* Cambiar el color */
+}
+  
+.grid-cell small {
+    font-size: 10px;
+    color: white; /* o cualquier color que prefieras */
 }

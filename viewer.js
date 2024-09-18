@@ -1,38 +1,71 @@
 // app.js
 // app.js
-function createGrid(rows, columns) {
-    const gridContainer = document.getElementById("grid-container");
-    gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-    gridContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-    gridContainer.innerHTML = '';
+// grid.js
+function createGrid(rows, cols) {
+    console.log('Creando Grid');
+    grid = [];
+    
+    const gridContainer = arreglarGrid(rows, cols);
 
-    for (let i = 0; i < rows * columns; i++) {
-        const cell = document.createElement('div');
-        cell.classList.add('cell');
-        gridContainer.appendChild(cell);
-    }
+    generarCeldas(rows, cols, gridContainer);
 
-    // Asegúrate de agregar el manejador de eventos después de crear las celdas
-    const cells = document.querySelectorAll('.cell');
-    cells.forEach(cell => cell.addEventListener('mousedown', handleCellClick));
+    return grid;
 }
-
-
-// app.js
-window.addEventListener('resize', () => {
-    const gridContainer = document.getElementById('grid-container');
-    const newSize = Math.min(window.innerWidth, window.innerHeight) * 0.4; // Ajustar el 40% del menor lado
-    gridContainer.style.width = `${newSize}px`;
-    gridContainer.style.height = `${newSize}px`;
-});
 
 // app.js
 document.addEventListener("DOMContentLoaded", () => {
+    console.log('HTML Cargado');
+    
     createGrid(20, 20); // Tamaño inicial del grid
+    const cells = Array.from(document.querySelectorAll('.cell')); // Obtener todas las celdas del grid
+    generateObstacles(cells, 20); // Generar los obstáculos
 });
+
+function generarCeldas(rows, cols, gridContainer) {
+    console.log('Generando Celdas');
+    for (let row = 0; row < rows; row++) {
+        const currentRow = [];
+        for (let col = 0; col < cols; col++) {
+            // Crea la representación en memoria (No visual)
+            const cellData = {
+                row: row,
+                col: col,
+                isStart: false,
+                isEnd: false,
+                isObstacle: false,
+                isClosed: false,
+                isFree: true
+            };
+            currentRow.push(cellData);
+
+            // Crea la representación visual (Visual)
+            const cellElement = document.createElement('div');
+            cellElement.classList.add('cell');
+            cellElement.dataset.row = row;
+            cellElement.dataset.col = col;
+
+            // Agrega un manejador de eventos para cada celda visual (Interaccion)
+            cellElement.addEventListener('mousedown', handleCellClick);
+
+            gridContainer.appendChild(cellElement);
+        }
+        grid.push(currentRow);
+    }
+}
+
+function arreglarGrid(rows, cols) {
+    console.log('Arraglando visuales del grid');
+    const gridContainer = document.getElementById("grid-container");
+    gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+    gridContainer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    gridContainer.innerHTML = '';
+    return gridContainer;
+}
 
 // app.js
 function generateObstacles(cells, percentage) {
+    console.log('Generando Obstaculos');
+    
     const totalCells = cells.length;
     const obstacleCount = Math.floor((percentage / 100) * totalCells);
 
@@ -46,39 +79,61 @@ function generateObstacles(cells, percentage) {
     // Aplicar la clase de obstáculo a las celdas correspondientes
     obstacleIndexes.forEach(index => {
         cells[index].classList.add('obstacle');
+        cells[index].removeEventListener('mousedown',handleCellClick);
+        setObstacle(grid,cells[index].dataset.row,cells[index].dataset.row)
     });
 }
 
-// app.js
-let startCell = null;
-let endCell = null;
+//TODO
+function markCurrentCell(cell) {
+    console.log('Marcando la casilla actual');
 
-function handleCellClick(event) {
-    const cell = event.target;
+    const div = document.querySelector(`[data-row="${cell.row}"][data-col="${cell.col}"]`);
+    div.classList.add('current');
+    // // Remover la clase current de cualquier celda que la tenga
+    // document.querySelectorAll('.current').forEach(c => c.classList.remove('current'));
 
-    // Asegúrate de que solo se pueda seleccionar celdas
-    if (!cell.classList.contains('cell')) return;
-
-    if (event.button === 0) { // Clic izquierdo
-        if (startCell) startCell.classList.remove('start');
-        startCell = cell;
-        startCell.classList.add('start');
-    } else if (event.button === 2) { // Clic derecho
-        if (endCell) endCell.classList.remove('end');
-        endCell = cell;
-        endCell.classList.add('end');
-    }
-
-    event.preventDefault(); // Prevenir el menú contextual del clic derecho
+    // // Agregar la clase current a la celda actual
+    // cell.classList.add('current');
 }
 
-// Agregar evento de clic a todas las celdas
-document.addEventListener('DOMContentLoaded', () => {
-    const cells = document.querySelectorAll('.cell');
-    cells.forEach(cell => cell.addEventListener('mousedown', handleCellClick));
-});
+//TODO
+function updateCellInfo(cell, row, col, g, h, f) {
+    console.log('Actualizando información de la celda');
+    // Modificar el contenido del div para mostrar información adicional
+    cell.innerHTML = `
+      <small>Row: ${row}, Col: ${col}</small><br/>
+      <small>g: ${g}, h: ${h}, f: ${f}</small>
+    `;
+}
 
-// app.js
-document.addEventListener('contextmenu', (event) => {
-    event.preventDefault(); // Prevenir el menú contextual del navegador
-});
+// ui.js
+//TODO
+function renderGrid(grid) {
+    console.log('Renderizando el Grid');
+    
+    const gridContainer = document.getElementById("grid-container");
+    gridContainer.innerHTML = ""; // Limpiar el contenido anterior
+
+    grid.forEach(row => {
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("grid-row");
+
+        row.forEach(cell => {
+            const cellDiv = document.createElement("div");
+            cellDiv.classList.add("grid-cell");
+
+            if (cell.isStart) {
+                cellDiv.classList.add("start-cell");
+            } else if (cell.isEnd) {
+                cellDiv.classList.add("end-cell");
+            } else if (cell.isObstacle) {
+                cellDiv.classList.add("obstacle-cell");
+            }
+
+            rowDiv.appendChild(cellDiv);
+        });
+
+        gridContainer.appendChild(rowDiv);
+    });
+}
