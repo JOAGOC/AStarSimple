@@ -89,6 +89,7 @@ function aStar(start, end) {
         }
 
         markCurrentCell(current);
+        // TODO updateCellInfo(current,gScore.get(current),fScore.get(current));
         openSet.delete(current);
         closedSet.add(current);
 

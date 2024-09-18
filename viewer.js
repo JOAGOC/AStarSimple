@@ -1,28 +1,37 @@
 // app.js
 // app.js
 // grid.js
+/**
+ * Crea y configura la representacion visual del grid y lo guarda en memoria
+ * @param {number} rows 
+ * @param {number} cols 
+ * @returns {Array<Array<HTMLDivElement>} grid
+ */
 function createGrid(rows, cols) {
     console.log('Creando Grid');
-    grid = [];
-    
-    const gridContainer = arreglarGrid(rows, cols);
 
-    generarCeldas(rows, cols, gridContainer);
-
-    return grid;
+    const gridContainer = arreglarGrid('grid-container', rows, cols);
+    return generarCeldas(rows, cols, gridContainer);
 }
 
 // app.js
 document.addEventListener("DOMContentLoaded", () => {
     console.log('HTML Cargado');
     
-    createGrid(20, 20); // Tamaño inicial del grid
-    const cells = Array.from(document.querySelectorAll('.cell')); // Obtener todas las celdas del grid
-    generateObstacles(cells, 20); // Generar los obstáculos
+    const cells = createGrid(20, 20); // Tamaño inicial del grid
+    generateObstacles(cells.flat(), 20); // Generar los obstáculos
 });
 
+/**
+ * Genera la representación de las celdas y las muestra en pantalla. Almacena un arreglo bidimensional con las referencias a las celdas.
+ * @param {number} rows 
+ * @param {number} cols 
+ * @param {HTMLElement} gridContainer 
+ * @returns {Array<Array<HTMLDivElement>>}
+ */
 function generarCeldas(rows, cols, gridContainer) {
     console.log('Generando Celdas');
+    const grid = [];
     for (let row = 0; row < rows; row++) {
         const currentRow = [];
         for (let col = 0; col < cols; col++) {
@@ -30,13 +39,9 @@ function generarCeldas(rows, cols, gridContainer) {
             const cellData = {
                 row: row,
                 col: col,
-                isStart: false,
-                isEnd: false,
-                isObstacle: false,
-                isClosed: false,
-                isFree: true
+                free: true // 1 libre, 0 obstaculo
             };
-            currentRow.push(cellData);
+            // Before currentRow.push(cellData);
 
             // Crea la representación visual (Visual)
             const cellElement = document.createElement('div');
@@ -48,21 +53,35 @@ function generarCeldas(rows, cols, gridContainer) {
             cellElement.addEventListener('mousedown', handleCellClick);
 
             gridContainer.appendChild(cellElement);
+            currentRow.push(cellElement);
         }
         grid.push(currentRow);
     }
+    return grid;
 }
 
-function arreglarGrid(rows, cols) {
-    console.log('Arraglando visuales del grid');
-    const gridContainer = document.getElementById("grid-container");
+/**
+ * Busca y configura un contenedor html por su id para mostrar el grid cuando sea llenado
+ * @param {string} containerId 
+ * @param {number} rows 
+ * @param {number} cols 
+ * @returns {HTMLElement}
+ */
+function arreglarGrid(containerId, rows, cols) {
+    console.log('Arreglando visuales del grid');
+    
+    const gridContainer = document.getElementById(containerId);
     gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
     gridContainer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
     gridContainer.innerHTML = '';
     return gridContainer;
 }
 
-// app.js
+/**
+ * Transforma un porcentaje de las celdas recibidas en obstaculos.
+ * @param {Array<HTMLDivElement>} cells 
+ * @param {number} percentage 
+ */
 function generateObstacles(cells, percentage) {
     console.log('Generando Obstaculos');
     
@@ -80,7 +99,7 @@ function generateObstacles(cells, percentage) {
     obstacleIndexes.forEach(index => {
         cells[index].classList.add('obstacle');
         cells[index].removeEventListener('mousedown',handleCellClick);
-        setObstacle(grid,cells[index].dataset.row,cells[index].dataset.row)
+        cells[index].dataset = null;
     });
 }
 
@@ -90,6 +109,8 @@ function markCurrentCell(cell) {
 
     const div = document.querySelector(`[data-row="${cell.row}"][data-col="${cell.col}"]`);
     div.classList.add('current');
+
+    
     // // Remover la clase current de cualquier celda que la tenga
     // document.querySelectorAll('.current').forEach(c => c.classList.remove('current'));
 
@@ -98,12 +119,12 @@ function markCurrentCell(cell) {
 }
 
 //TODO
-function updateCellInfo(cell, row, col, g, h, f) {
+function updateCellInfo(cell, g, f) {
     console.log('Actualizando información de la celda');
     // Modificar el contenido del div para mostrar información adicional
     cell.innerHTML = `
-      <small>Row: ${row}, Col: ${col}</small><br/>
-      <small>g: ${g}, h: ${h}, f: ${f}</small>
+      <small>Row: ${cell.row}, Col: ${cell.col}</small><br/>
+      <small>g: ${g}, f: ${f}</small>
     `;
 }
 
