@@ -1,11 +1,31 @@
-// aStar.js
+//TODO Revisar el algoritmo original.
+
+/**
+ * @type {Set<HTMLDivElement>} - Contiene las celdas competidoras
+ */
 const openSet = new Set();
+
+/**
+ * @type {Set<HTMLDivElement>} - Contiene las celdas ya visitadas
+ */
 const closedSet = new Set();
+
+//TODO
 const gScore = new Map();
 const fScore = new Map();
 const cameFrom = new Map();
-let grid = [];
 
+/**
+ * El grid principal que se muestra en el algoritmo
+ * @type {HTMLDivElement[][]}
+ */
+let grid;
+
+/**
+ * Inicializa las estructuras de datos para el algoritmo A Star.
+ * @param {HTMLDivElement} start - La celda seleccionada de inicio
+ * @param {HTMLDivElement} end - La celda seleccionada de fin
+ */
 function initialize(start, end) {
     console.log('Inicializando el algoritmo A*');
     
@@ -14,18 +34,31 @@ function initialize(start, end) {
     fScore.set(start, manhattanDistance(start, end));
 }
 
-// heuristics.js
+/**
+ * Usa el dataset de los div .cell para calcular la distancia faltante desde el punto A al punto B
+ * 
+ * @param {HTMLDivElement} pointA - Div del punto de partida
+ * @param {HTMLDivElement} pointB - Div del punto de destino
+ * @returns {Number} la distancia del origen al destino
+ */
 function manhattanDistance(pointA, pointB) {
     console.log('Calculando distancia manhatan');
-    
-    return Math.abs(pointA.row - pointB.row) + Math.abs(pointA.col - pointB.col);
+    let {row, col} = pointA.dataset;
+    const rowA = parseInt(row);
+    const colA = parseInt(col);
+
+    ({row, col} = pointB.dataset);
+    const rowB = parseInt(row);
+    const colB = parseInt(col);
+
+    const costo = Math.abs(rowA - rowB) + Math.abs(colA - colB);
+    console.log(costo);
+    return costo;
 }
 
-// aStar.js
 //TODO
 function getLowestFScoreNode() {
     console.log('Encontrando el nodo con menor FScore');
-    
 
     let lowest = null;
     openSet.forEach(node => {
@@ -36,8 +69,14 @@ function getLowestFScoreNode() {
     return lowest;
 }
 
-// aStar.js
-//TODO VW
+//TODO revisar lo del GScore, muy extraño
+//TODO
+/**
+ * Calcula los scores de los vecinos para la siguiente iteracion del algoritmo
+ * @param {HTMLDivElement} current - La celda actual 
+ * @param {HTMLDivElement[]} neighbors - Los vecinos de la celda actual
+ * @param {HTMLDivElement} end - La celda final a la que llegar
+ */
 function processNeighbors(current, neighbors, end) {
     console.log('Procesando a los vecinos');
     
@@ -54,11 +93,10 @@ function processNeighbors(current, neighbors, end) {
 
         cameFrom.set(neighbor, current);
         gScore.set(neighbor, tentativeGScore);
-        fScore.set(neighbor, gScore.get(neighbor) + manhattanDistance(neighbor, end));
+        fScore.set(neighbor, manhattanDistance(neighbor, end));
     });
 }
 
-// aStar.js
 //TODO VW
 function reconstructPath(current) {
     console.log('Reconstruyendo el camino');
@@ -72,13 +110,16 @@ function reconstructPath(current) {
     return path;
 }
 
-// aStar.js
 //TODO
-function aStar(start, end) {
-    console.clear()
+/**
+ * Es el orquestador de todos los algoritmos necesarios para resolver y visualizar el algoritmo A Star.
+ * @param {HTMLDivElement} start - Celda seleccionada origen 
+ * @param {HTMLDivElement} end - Celda seleccionada destino
+ * @returns {HTMLDivElement} - El camino mas corto del origen al destino
+ */
+async function aStar(start, end) {
     console.log('LLamando al algoritmo principal');
     
-
     initialize(start, end);
 
     while (openSet.size > 0) {
@@ -88,25 +129,43 @@ function aStar(start, end) {
             return reconstructPath(current);
         }
 
+        markClosedSet(closedSet);
         markCurrentCell(current);
         // TODO updateCellInfo(current,gScore.get(current),fScore.get(current));
         openSet.delete(current);
+        fScore.delete(current);
         closedSet.add(current);
+
+        console.log(openSet,fScore,closedSet);
+        await esperarInteraccion();
 
         const neighbors = getNeighbors(current, grid);
         processNeighbors(current, neighbors, end);
-        break;
+
+        markOpenSet(openSet);
+        console.log(openSet);
+
+        console.log(openSet,fScore,closedSet);
+        await esperarInteraccion();
     }
 
     return []; // No se encontró un camino
 }
 
-// neighbors.js
-//TODO
+/**
+ * Obtiene los vecinos adyacentes en sus 4 magnitudes (Arriba, abajo, izquierda y derecha).
+ * Los vecinos válidos se añaden al arreglo.
+ * @param {HTMLDivElement} cell 
+ * @param {HTMLDivElement[][]} grid 
+ * @returns {HTMLDivElement[]}
+ */
 function getNeighbors(cell, grid) {
     console.log('Obteniendo Vecinos');
 
-    const { row, col } = cell;
+    let { row, col } = cell.dataset;
+    row = parseInt(row);
+    col = parseInt(col);
+    
     const neighbors = [];
 
     // Posiciones de los posibles vecinos: arriba, abajo, izquierda, derecha
@@ -124,39 +183,10 @@ function getNeighbors(cell, grid) {
 
         if (newRow >= 0 && newRow < grid.length && newCol >= 0 && newCol < grid[0].length) {
             const neighbor = grid[newRow][newCol];
-            if (!neighbor.isObstacle) {
+            if (!neighbor.classList.contains('obstacle')) {
                 neighbors.push(neighbor);
             }
         }
     }
     return neighbors;
-}
-
-// grid.js
-function setStartCell(grid, row, col) {
-    console.log('Guardando celda de inicio en memoria');
-
-    grid[row][col].isStart = true;
-    grid[row][col].isFree = false;
-}
-
-function setEndCell(grid, row, col) {
-    console.log('Guardando celda final en memoria');
-
-    grid[row][col].isEnd = true;
-    grid[row][col].isFree = false;
-}
-
-function setObstacle(grid, row, col) {
-    console.log('Guardando celda bloqueada en memoria');
-
-    grid[row][col].isObstacle = true;
-    grid[row][col].isFree = false;
-}
-
-function setClosed(grid,row,col){
-    console.log('Guardando celda cerrada en memoria');
-    
-    grid[row][col].isClosed = true;
-    grid[row][col].isFree = false;
 }

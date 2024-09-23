@@ -1,11 +1,26 @@
-// app.js
-// app.js
-// grid.js
+//TODO Marcar el camino resultante.
+//TODO Añadir el temporizador.
+
+document.addEventListener("DOMContentLoaded", () => {
+    cargaInicial();
+});
+
+/**
+ * Carga el primer mapa al cargar el contenido de la pagina.
+ */
+function cargaInicial() {
+    console.log('HTML Cargado');
+
+    const cells = createGrid(20, 20); // Tamaño inicial del grid
+    generateObstacles(cells.flat(), 20); // Generar los obstáculos
+    grid = cells;
+}
+
 /**
  * Crea y configura la representacion visual del grid y lo guarda en memoria
  * @param {number} rows 
  * @param {number} cols 
- * @returns {Array<Array<HTMLDivElement>} grid
+ * @returns {HTMLDivElement[][]} grid
  */
 function createGrid(rows, cols) {
     console.log('Creando Grid');
@@ -13,14 +28,6 @@ function createGrid(rows, cols) {
     const gridContainer = arreglarGrid('grid-container', rows, cols);
     return generarCeldas(rows, cols, gridContainer);
 }
-
-// app.js
-document.addEventListener("DOMContentLoaded", () => {
-    console.log('HTML Cargado');
-    
-    const cells = createGrid(20, 20); // Tamaño inicial del grid
-    generateObstacles(cells.flat(), 20); // Generar los obstáculos
-});
 
 /**
  * Genera la representación de las celdas y las muestra en pantalla. Almacena un arreglo bidimensional con las referencias a las celdas.
@@ -103,19 +110,29 @@ function generateObstacles(cells, percentage) {
     });
 }
 
-//TODO
+/**
+ * Modifica la apariencia de la celda para marcarla como la celda ganadora o actual.
+ * 
+ * Esta función agrega la clase CSS 'current' a la celda proporcionada, lo que 
+ * permite aplicar estilos que visualmente marquen la celda como la seleccionada o ganadora.
+ * 
+ * @param {HTMLDivElement} cell - El elemento HTML de tipo <div> que representa la celda a marcar.
+ */
 function markCurrentCell(cell) {
     console.log('Marcando la casilla actual');
-
-    const div = document.querySelector(`[data-row="${cell.row}"][data-col="${cell.col}"]`);
-    div.classList.add('current');
-
     
-    // // Remover la clase current de cualquier celda que la tenga
-    // document.querySelectorAll('.current').forEach(c => c.classList.remove('current'));
+    cell.classList.add('current');
+}
 
-    // // Agregar la clase current a la celda actual
-    // cell.classList.add('current');
+
+/**
+ * Marca la vista de las celdas en el openSet
+ * @param {HTMLDivElement[]} openSet - Marca las celdas abiertas
+ */
+function markOpenSet(openSet) {
+    console.log('Marcando las casillas abiertas');
+    
+    openSet.forEach( e => e.classList.add('open'));
 }
 
 //TODO
@@ -157,4 +174,20 @@ function renderGrid(grid) {
 
         gridContainer.appendChild(rowDiv);
     });
+}
+
+//TODO Revisar la eficiencia
+/**
+ * Marca visualmente todas las celdas del conjunto cerrado.
+ * 
+ * Esta función itera sobre una lista de elementos HTML de tipo <div>, 
+ * agregando la clase 'closed' a cada uno. Esto permite aplicar estilos que 
+ * visualmente indiquen que estas celdas están en un estado cerrado o inactivo.
+ * 
+ * @param {HTMLDivElement[]} closedSet - Un array de elementos HTML <div> que representan las celdas a marcar como cerradas.
+ */
+function markClosedSet(closedSet) {
+    console.log('Marcando las casillas cerradas');
+
+    closedSet.forEach( e => e.classList.add('closed'));
 }

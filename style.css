@@ -37,3 +37,12 @@
     font-size: 10px;
     color: white; /* o cualquier color que prefieras */
 }
+
+.open {
+    background-color: springgreen;
+}
+
+.closed {
+    background-color: lightslategray;
+    border: none;
+}
