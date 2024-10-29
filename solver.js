@@ -13,6 +13,9 @@ const closedSet = new Set();
 //TODO
 const gScore = new Map();
 const fScore = new Map();
+/**
+ * @type Map<HTMLDivElement,HTMLDivElement>
+ */
 const cameFrom = new Map();
 
 /**
@@ -101,12 +104,19 @@ function processNeighbors(current, neighbors, end) {
 function reconstructPath(current) {
     console.log('Reconstruyendo el camino');
     
+    /**
+     * @type Map<HTMLDivElement,HTMLDivElement>
+     */
     const path = [];
     while (cameFrom.has(current)) {
         path.push(current);
         current = cameFrom.get(current);
     }
     path.reverse();
+    path.forEach( e => {
+        e.classList.add('track');
+    setTimeout(function(){console.log('a')},1000);
+    });
     return path;
 }
 

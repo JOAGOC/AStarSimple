@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sección de Botones</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+
+  <!-- Sección de Botones -->
+  <section class="p-6 bg-white rounded-lg shadow-md max-w-md w-full">
+    <h2 class="text-lg font-semibold mb-4 text-gray-700">Opciones de Tablero</h2>
+    
+    <div class="grid grid-cols-2 gap-4">
+      <!-- Botón Cambiar Tamaño del Grid / Regenerar Tablero -->
+      <button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded">
+        Cambiar Tamaño del Grid / Regenerar Tablero
+      </button>
+
+      <!-- Botón Reiniciar el Tablero -->
+      <button class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded">
+        Reiniciar el Tablero
+      </button>
+
+      <!-- Botón Cargar Mapa -->
+      <button class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded">
+        Cargar Mapa
+      </button>
+
+      <!-- Botón Guardar Mapa -->
+      <button class="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded">
+        Guardar Mapa
+      </button>
+
+      <!-- Botón Añadir un Mapa / Tablero -->
+      <button class="col-span-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded">
+        Añadir un Mapa / Tablero
+      </button>
+    </div>
+  </section>
+
+  <section>
+    <button id="btnGenerarTablero" onclick="toggleMessage()">
+        Cambiar Tamaño del Grid/Reiniciar el tablero
+    </button>
+    <button>
+        Reiniciar Tablero
+    </button>
+  </section>
+
+  <script>
+    let message=false;
+
+    function toggleMessage() {
+        console.log('oojsa');
+        
+        const btn = document.querySelector('#btnGenerarTablero');
+        if (message) {
+            btn.textContent="Cambiar Tamaño del Grid";
+        } else {
+            btn.textContent="Regenerar Tablero";
+        }
+        message=!message;
+    }
+  </script>
+
+</body>
+</html>

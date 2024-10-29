@@ -5,11 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visualización A*</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="Tablero.css">
+    <link rel="stylesheet" href="DockMenu.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="Dock.js"></script>
 </head>
 
 <body>
-    <div id="controls">
+
+    <dock-menu></dock-menu>
+
+    <div class="ml-12" id="controls">
         <label for="algorithm">Algoritmo:</label>
         <select id="algorithm">
             <option value="standard">A* Estándar</option>
@@ -33,9 +39,37 @@
 
 
         <!-- index.html -->
-        <div id="grid-container"></div>
+        <div id="grid-container" class="p-6"></div>
     </div>
+<!--     
     
+    <div style="width: 1280px; height: 832px; position: relative; background: white">
+        <div style="width: 394px; height: 56px; left: 816px; top: 31px; position: absolute; background: #0081E2; border-radius: 7px"></div>
+        <div style="width: 394px; height: 56px; left: 816px; top: 108px; position: absolute; background: #0081E2; border-radius: 7px"></div>
+        <div style="width: 394px; height: 56px; left: 816px; top: 186px; position: absolute; background: #0081E2; border-radius: 7px"></div>
+        <div style="width: 394px; height: 159px; left: 816px; top: 265px; position: absolute; background: #0081E2; border-radius: 7px"></div>
+        <div style="left: 895px; top: 362px; position: absolute; text-align: center; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Tiempo: 0s, Pasos: 0</div>
+        <div style="left: 816px; top: 451px; position: absolute; text-align: center; color: black; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Velocidad de Paso</div>
+        <div style="left: 848px; top: 560px; position: absolute; text-align: center; color: black; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Modo Info</div>
+        <div style="width: 168px; left: 1046px; top: 558px; position: absolute; color: black; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Obs. Dinámico</div>
+        <div style="width: 168px; left: 1046px; top: 600px; position: absolute; color: black; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">A* con Heaps</div>
+        <div style="width: 138px; left: 848px; top: 602px; position: absolute; text-align: center; color: black; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">A* Estándar</div>
+        <div style="left: 947px; top: 299px; position: absolute; text-align: center; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Estadísticas</div>
+        <div style="left: 905px; top: 201px; position: absolute; text-align: center; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Cambiar Heuristica</div>
+        <div style="left: 979px; top: 47px; position: absolute; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Iniciar</div>
+        <div style="left: 928px; top: 122px; position: absolute; text-align: center; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Siguiente Paso</div>
+        <div style="width: 394px; height: 56px; left: 816px; top: 669px; position: absolute; background: #0081E2; border-radius: 7px"></div>
+        <div style="width: 394px; height: 56px; left: 816px; top: 746px; position: absolute; background: #0081E2; border-radius: 7px"></div>
+        <div style="left: 930px; top: 685px; position: absolute; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Configuración</div>
+        <div style="left: 931px; top: 760px; position: absolute; text-align: center; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Siguiente Paso</div>
+        <div style="width: 114px; height: 35px; left: 816px; top: 500px; position: absolute; background: white; border: 1px black solid"></div>
+        <div style="width: 20px; height: 20px; left: 815px; top: 566px; position: absolute; background: #D9D9D9; border-radius: 9999px"></div>
+        <div style="width: 20px; height: 20px; left: 815px; top: 609px; position: absolute; background: #D9D9D9; border-radius: 9999px"></div>
+        <div style="width: 20px; height: 20px; left: 1014px; top: 565px; position: absolute; background: #D9D9D9; border-radius: 9999px"></div>
+        <div style="width: 20px; height: 20px; left: 1014px; top: 608px; position: absolute; background: #D9D9D9; border-radius: 9999px"></div>
+        <div style="width: 394.02px; height: 0px; left: 816px; top: 647.75px; position: absolute; border: 1px black solid"></div>
+      </div> -->
+
     <script src="heap.js"></script>
     <script src="interaction.js"></script>
     <script src="solver.js"></script>

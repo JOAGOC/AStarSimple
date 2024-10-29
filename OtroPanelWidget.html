@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <style>
+
+        #generador-tablero {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        #tablero-seccion {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #generador-tablero,
+        #control-tablero,
+        #tablero,
+        #ayuda-desplegable {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            /* Ajustamos tres columnas */
+            grid-template-columns: 1fr 3fr 1fr;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            grid-column: 1 / 2;
+        }
+
+        .input-group input[type="range"] {
+            grid-column: 2 / 3;
+            width: 100%;
+        }
+
+        .input-group input[type="text"] {
+            grid-column: 3 / 4;
+            text-align: center;
+        }
+
+        #control-tablero {
+            text-align: center;
+        }
+
+        #control-tablero button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #control-tablero button:hover {
+            background-color: #0056b3;
+        }
+
+        #tablero {
+            display: grid;
+            gap: 1px;
+            background-color: #ccc;
+            padding: 5px;
+        }
+
+        .celda {
+            width: 25px;
+            height: 25px;
+            background-color: white;
+        }
+
+        .celda.obstaculo {
+            background-color: black;
+        }
+
+        .celda.inicio {
+            background-color: green;
+        }
+
+        .celda.fin {
+            background-color: red;
+        }
+
+        .celda.abierta {
+            background-color: lightblue;
+        }
+
+        .celda.cerrada {
+            background-color: lightgray;
+        }
+
+        .celda.actual {
+            background-color: yellow;
+        }
+
+        #ayuda-desplegable h3 {
+            margin-bottom: 10px;
+        }
+
+        #ayuda-desplegable ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #ayuda-desplegable li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        #ayuda-desplegable .celda {
+            margin-right: 10px;
+            border: 1px solid #000;
+        }
+    </style>
+
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title></title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tamanoGridSlider = document.getElementById('tamano-grid');
+            const tamanoGridText = document.getElementById('tamano-grid-text');
+
+            const densidadObstaculosSlider = document.getElementById('densidad-obstaculos');
+            const densidadObstaculosText = document.getElementById('densidad-obstaculos-text');
+
+            // Sincronización entre slider y campo de texto para el tamaño de la cuadrícula
+            tamanoGridSlider.addEventListener('input', function () {
+                tamanoGridText.value = tamanoGridSlider.value;
+            });
+
+            tamanoGridText.addEventListener('input', function () {
+                tamanoGridSlider.value = tamanoGridText.value;
+            });
+
+            // Sincronización entre slider y campo de texto para la densidad de obstáculos
+            densidadObstaculosSlider.addEventListener('input', function () {
+                densidadObstaculosText.value = densidadObstaculosSlider.value;
+            });
+
+            densidadObstaculosText.addEventListener('input', function () {
+                densidadObstaculosSlider.value = densidadObstaculosText.value;
+            });
+        });
+    </script>
+
+
+    <section id="tablero-seccion">
+        <!-- Generador de Tablero -->
+        <div id="generador-tablero">
+            <div class="input-group">
+                <label for="tamano-grid">Tamaño de la Cuadrícula:</label>
+                <input type="range" id="tamano-grid" min="5" max="50">
+                <input type="text" id="tamano-grid-text" value="25">
+            </div>
+
+            <div class="input-group">
+                <label for="densidad-obstaculos">Densidad de Obstáculos:</label>
+                <input type="range" id="densidad-obstaculos" min="0" max="100">
+                <input type="text" id="densidad-obstaculos-text" value="20">
+            </div>
+
+            <button id="regenerar-tablero">Regenerar Tablero</button>
+        </div>
+
+
+        <!-- Botones de tablero -->
+        <div id="control-tablero">
+            <button id="reiniciar-tablero">Reiniciar Tablero</button>
+        </div>
+
+        <!-- Tablero -->
+        <div id="tablero">
+            <!-- Aquí irían las celdas de la cuadrícula generadas dinámicamente -->
+        </div>
+
+        <!-- Sección de Ayuda Desplegable -->
+        <div id="ayuda-desplegable">
+            <h3>Simbología del Mapa</h3>
+            <ul>
+                <li>
+                    <div class="celda obstaculo"></div> Obstáculo
+                </li>
+                <li>
+                    <div class="celda inicio"></div> Inicio
+                </li>
+                <li>
+                    <div class="celda fin"></div> Fin
+                </li>
+                <li>
+                    <div class="celda abierta"></div> Abierta
+                </li>
+                <li>
+                    <div class="celda cerrada"></div> Cerrada
+                </li>
+                <li>
+                    <div class="celda actual"></div> Actual
+                </li>
+            </ul>
+        </div>
+    </section>
+</body>
+
+</html>

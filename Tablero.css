@@ -1,0 +1,60 @@
+#grid-container {
+    height: 400px;
+    aspect-ratio: 1/1;
+    display: grid;
+    gap: 1px;
+    /* Espacio entre celdas */
+}
+
+.cell {
+    background-color: #f4f4f4;
+    /* Color claro para las celdas libres */
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.obstacle {
+    background-color: #333;
+    /* Color oscuro para obstáculos */
+}
+
+/* style.css */
+.start {
+    background-color: #00ff00;
+    /* Color para la celda de inicio */
+}
+
+.end {
+    background-color: #ff0000;
+    /* Color para la celda de fin */
+}
+
+.current {
+    border: 2px solid rgb(0, 0, 0);
+    /* Ejemplo de resaltado */
+    background-color: rgba(255, 255, 0, 0.6);
+    /* Cambiar el color */
+}
+
+.grid-cell small {
+    font-size: 10px;
+    color: white;
+    /* o cualquier color que prefieras */
+}
+
+.open {
+    background-color: springgreen;
+}
+
+.closed {
+    background-color: lightslategray;
+    border: none;
+}
+
+.track {
+    background-color: #74c7f7;
+    /* Color oscuro para obstáculos */
+}
