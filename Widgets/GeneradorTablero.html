@@ -1,0 +1,155 @@
+<!-- TODO -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Generador del Tablero</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .widget {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            width: 300px;
+        }
+
+        .control {
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        // Sincronización para gridSize
+        const gridSizeInput = document.getElementById('gridSize');
+        const gridSizeValue = document.getElementById('gridSizeValue');
+
+        gridSizeInput.addEventListener('input', function () {
+            gridSizeValue.value = this.value;
+        });
+
+        gridSizeValue.addEventListener('input', function () {
+            const value = Math.min(Math.max(this.value, 20), 60); // Limitar entre 20 y 60
+            gridSizeInput.value = value;
+            this.value = value; // Actualizar el input text
+        });
+
+        // Sincronización para obstacleDensity
+        const obstacleDensityInput = document.getElementById('obstacleDensity');
+        const obstacleDensityValue = document.getElementById('obstacleDensityValue');
+
+        obstacleDensityInput.addEventListener('input', function () {
+            obstacleDensityValue.value = this.value + '%'; // Agregar el símbolo de porcentaje
+        });
+
+        obstacleDensityValue.addEventListener('input', function () {
+            const value = Math.min(Math.max(this.value.replace('%', ''), 1), 99); // Limitar entre 1 y 99
+            obstacleDensityInput.value = value;
+            this.value = value + '%'; // Actualizar el input text
+        });
+    </script>
+
+    <div>
+        <h2>Generador del Tablero</h2>
+
+        <div>
+            <label for="gridSize">Ajustar Tamaño de Cuadrícula:</label>
+            <input type="range" id="gridSize" min="5" max="50" value="20">
+            <input type="text" id="gridSizeValue" value="20">
+        </div>
+
+        <div>
+            <label for="obstacleDensity">Ajustar Densidad de Obstáculos:</label>
+            <input type="range" id="obstacleDensity" min="0" max="100" value="30">
+            <input type="text" id="obstacleDensityValue" value="30%">
+        </div>
+
+        <div>
+            <button id="resizeGrid">Generar Nuevo Tablero</button>
+        </div>
+
+        <div>
+            <button id="resetBoard">Reiniciar Tablero</button>
+        </div>
+    </div>
+
+    <!-- <div class="widget">
+        <h2>Generador del Tablero</h2>
+
+        <div class="control">
+            <button id="resizeGrid">Cambiar el Tamaño del Grid</button>
+        </div>
+
+        <div class="control">
+            <button id="resetBoard">REINICIAR el tablero</button>
+        </div>
+
+        <div class="control">
+            <label for="gridSize">Ajustar Tamaño de Cuadrícula:</label>
+            <input type="range" id="gridSize" min="5" max="50" value="20">
+            <span id="gridSizeValue">20</span>
+        </div>
+
+        <div class="control">
+            <label for="obstacleDensity">Ajustar Densidad de Obstáculos:</label>
+            <input type="range" id="obstacleDensity" min="0" max="100" value="30">
+            <span id="obstacleDensityValue">30%</span>
+        </div>
+    </div>
+
+    <script>
+        const gridSizeInput = document.getElementById('gridSize');
+        const gridSizeValue = document.getElementById('gridSizeValue');
+        const obstacleDensityInput = document.getElementById('obstacleDensity');
+        const obstacleDensityValue = document.getElementById('obstacleDensityValue');
+
+        // Actualiza el valor mostrado del tamaño de la cuadrícula
+        gridSizeInput.addEventListener('input', function () {
+            gridSizeValue.textContent = this.value;
+        });
+
+        // Actualiza el valor mostrado de la densidad de obstáculos
+        obstacleDensityInput.addEventListener('input', function () {
+            obstacleDensityValue.textContent = this.value + '%';
+        });
+
+        // Añade la funcionalidad de los botones (a implementar)
+        document.getElementById('resizeGrid').addEventListener('click', function () {
+            alert('Cambiar el Tamaño del Grid a: ' + gridSizeInput.value);
+        });
+
+        document.getElementById('resetBoard').addEventListener('click', function () {
+            alert('Reiniciar el tablero');
+        });
+    </script> -->
+
+</body>
+
+</html>
