@@ -1,155 +1,159 @@
 <!-- TODO -->
+<!-- Terminar el UX. Ajustar el Tootlip y El mensaje de generando -->
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Generador del Tablero</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        .widget {
-            border: 1px solid #ccc;
-            padding: 20px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            width: 300px;
-        }
-
-        .control {
-            margin-bottom: 15px;
-        }
-
-        button {
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        input[type="range"] {
-            width: 100%;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="Dock.js"></script>
+  <title>Generador del Tablero</title>
 </head>
 
-<body>
+<body style="background-color: gray">
+  <dock-menu></dock-menu>
+  <div class="grid gap-4 grid-cols-2 max-w-lg mx-auto mt-10 p-4 bg-gray-50 shadow-2xl rounded-lg">
+    <div class="col-span-4 grid grid-cols-1">
+      <h2 class="text-2xl font-bold text-gray-800">Generador del Tablero</h2>
+      <hr/>
+    </div>
+
+    <label for="gridSize" class="col-span-3 text-gray-700 font-medium">Ajustar Tamaño de Cuadrícula</label>
+    <input type="text" id="gridSizeValue" value="20"
+      class="ml-auto w-12 bg-transparent rounded-md text-center" />
+    <input type="range" id="gridSize" min="20" max="60" value="32"
+      class="col-span-4 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+      style="background: linear-gradient(to right, #3b82f6 30%, #e5e7eb 30%);" oninput="updateSlider(this)" />
+
+    <label for="obstacleDensity" class="col-span-3 text-gray-700 font-medium">Ajustar Densidad de Obstáculos</label>
+    <input type="text" id="obstacleDensityValue" value="30"
+      class="ml-auto w-12 bg-transparent rounded-md text-center" />
+    <input type="range" id="obstacleDensity" min="1" max="99" value="30"
+      class="col-span-4 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+      style="background: linear-gradient(to right, #3b82f6 30%, #e5e7eb 30%);" oninput="updateSlider(this)" />
 
     <script>
-        // Sincronización para gridSize
-        const gridSizeInput = document.getElementById('gridSize');
-        const gridSizeValue = document.getElementById('gridSizeValue');
-
-        gridSizeInput.addEventListener('input', function () {
-            gridSizeValue.value = this.value;
-        });
-
-        gridSizeValue.addEventListener('input', function () {
-            const value = Math.min(Math.max(this.value, 20), 60); // Limitar entre 20 y 60
-            gridSizeInput.value = value;
-            this.value = value; // Actualizar el input text
-        });
-
-        // Sincronización para obstacleDensity
-        const obstacleDensityInput = document.getElementById('obstacleDensity');
-        const obstacleDensityValue = document.getElementById('obstacleDensityValue');
-
-        obstacleDensityInput.addEventListener('input', function () {
-            obstacleDensityValue.value = this.value + '%'; // Agregar el símbolo de porcentaje
-        });
-
-        obstacleDensityValue.addEventListener('input', function () {
-            const value = Math.min(Math.max(this.value.replace('%', ''), 1), 99); // Limitar entre 1 y 99
-            obstacleDensityInput.value = value;
-            this.value = value + '%'; // Actualizar el input text
-        });
+      function updateSlider(slider) {
+        const value = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+        slider.style.background = `linear-gradient(to right, #3b82f6 ${value}%, #e5e7eb ${value}%)`;
+      }
     </script>
 
-    <div>
-        <h2>Generador del Tablero</h2>
+    <style>
+      /* Estilos para el handler del slider */
+      input[type="range"]::-webkit-slider-thumb {
+        appearance: none;
+        height: 8px;
+        /* Mismo tamaño que el slider */
+        width: 8px;
+        background-color: #fff;
+        /* Color del handler */
+        border-radius: 50%;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+      }
 
-        <div>
-            <label for="gridSize">Ajustar Tamaño de Cuadrícula:</label>
-            <input type="range" id="gridSize" min="5" max="50" value="20">
-            <input type="text" id="gridSizeValue" value="20">
-        </div>
+      input[type="range"]::-moz-range-thumb {
+        height: 8px;
+        width: 8px;
+        background-color: #fff;
+        /* Color del handler */
+        border-radius: 50%;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+      }
+    </style>
 
-        <div>
-            <label for="obstacleDensity">Ajustar Densidad de Obstáculos:</label>
-            <input type="range" id="obstacleDensity" min="0" max="100" value="30">
-            <input type="text" id="obstacleDensityValue" value="30%">
-        </div>
+    <div class="col-span-4 grid grid-cols-2 justify-items-stretch">
+      <button id="resizeGrid" data-tooltip="Reemplaza el tablero actual con uno nuevo"
+        class="mx-2 border-2 border-sky-700 hover:border-sky-300 font-semibold py-2 px-4 rounded-lg transition duration-200">
+        Generar
+      </button>
 
-        <div>
-            <button id="resizeGrid">Generar Nuevo Tablero</button>
-        </div>
-
-        <div>
-            <button id="resetBoard">Reiniciar Tablero</button>
-        </div>
+      <button id="resetBoard" data-tooltip="Devuelve el tablero actual a su estado inicial"
+        class="mx-2 border-2 border-sky-700 hover:border-sky-300 font-semibold py-2 px-4 rounded-lg transition duration-200">
+        Reiniciar
+      </button>
     </div>
 
-    <!-- <div class="widget">
-        <h2>Generador del Tablero</h2>
-
-        <div class="control">
-            <button id="resizeGrid">Cambiar el Tamaño del Grid</button>
-        </div>
-
-        <div class="control">
-            <button id="resetBoard">REINICIAR el tablero</button>
-        </div>
-
-        <div class="control">
-            <label for="gridSize">Ajustar Tamaño de Cuadrícula:</label>
-            <input type="range" id="gridSize" min="5" max="50" value="20">
-            <span id="gridSizeValue">20</span>
-        </div>
-
-        <div class="control">
-            <label for="obstacleDensity">Ajustar Densidad de Obstáculos:</label>
-            <input type="range" id="obstacleDensity" min="0" max="100" value="30">
-            <span id="obstacleDensityValue">30%</span>
-        </div>
+    <!-- Mensaje Temporal -->
+    <div id="tempMessage" class="hidden mt-6 fixed| inset-0 flex items-center justify-center bg-black| bg-opacity-50|">
+      <div class="bg-white p-4 rounded-lg shadow-xl text-center">
+        <p id="messageText" class="text-lg font-medium mb-4">Generando...</p>
+        <button id="cancelButton" class="border-2 border-red-500 text-whitea px-4 py-2 rounded">
+          Cancelar
+        </button>
+      </div>
     </div>
 
     <script>
-        const gridSizeInput = document.getElementById('gridSize');
-        const gridSizeValue = document.getElementById('gridSizeValue');
-        const obstacleDensityInput = document.getElementById('obstacleDensity');
-        const obstacleDensityValue = document.getElementById('obstacleDensityValue');
+      function showTempMessage(duration = 3000, cancelable = true) {
+        const tempMessage = document.getElementById("tempMessage");
+        const messageText = document.getElementById("messageText");
+        const cancelButton = document.getElementById("cancelButton");
 
-        // Actualiza el valor mostrado del tamaño de la cuadrícula
-        gridSizeInput.addEventListener('input', function () {
-            gridSizeValue.textContent = this.value;
-        });
+        tempMessage.classList.remove("hidden");
 
-        // Actualiza el valor mostrado de la densidad de obstáculos
-        obstacleDensityInput.addEventListener('input', function () {
-            obstacleDensityValue.textContent = this.value + '%';
-        });
+        // Hide after duration
+        const timeout = setTimeout(() => {
+          tempMessage.classList.add("hidden");
+        }, duration);
 
-        // Añade la funcionalidad de los botones (a implementar)
-        document.getElementById('resizeGrid').addEventListener('click', function () {
-            alert('Cambiar el Tamaño del Grid a: ' + gridSizeInput.value);
-        });
+        // Cancel functionality
+        if (cancelable) {
+          cancelButton.classList.remove("hidden");
+          cancelButton.onclick = () => {
+            clearTimeout(timeout);
+            tempMessage.classList.add("hidden");
+          };
+        } else {
+          cancelButton.classList.add("hidden");
+        }
+      }
 
-        document.getElementById('resetBoard').addEventListener('click', function () {
-            alert('Reiniciar el tablero');
-        });
-    </script> -->
+      // Example of usage
+      document
+        .getElementById("resizeGrid")
+        .addEventListener("click", () => showTempMessage());
+      document
+        .getElementById("resetBoard")
+        .addEventListener("click", () => showTempMessage());
+    </script>
+  </div>
 
+  <script>
+    // Sincronización para gridSize
+    const gridSizeRange = document.getElementById("gridSize");
+    const gridSizeValue = document.getElementById("gridSizeValue");
+
+    gridSizeRange.addEventListener("input", () => {
+      gridSizeValue.value = gridSizeRange.value;
+    });
+
+    gridSizeValue.addEventListener("input", () => {
+      const value = Math.min(Math.max(gridSizeValue.value, 20), 60); // Limitar el valor entre 20 y 60
+      gridSizeRange.value = value;
+      gridSizeValue.value = value;
+    });
+
+    // Sincronización para obstacleDensity
+    const obstacleDensityRange = document.getElementById("obstacleDensity");
+    const obstacleDensityValue = document.getElementById(
+      "obstacleDensityValue"
+    );
+
+    obstacleDensityRange.addEventListener("input", () => {
+      obstacleDensityValue.value = obstacleDensityRange.value + "%";
+    });
+
+    obstacleDensityValue.addEventListener("input", () => {
+      const value = Math.min(
+        Math.max(obstacleDensityValue.value.replace("%", ""), 1),
+        99
+      ); // Limitar el valor entre 1 y 99
+      obstacleDensityRange.value = value;
+      obstacleDensityValue.value = value + "%";
+    });
+  </script>
 </body>
 
 </html>
